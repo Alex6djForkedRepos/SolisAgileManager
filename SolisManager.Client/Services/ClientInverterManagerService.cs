@@ -28,15 +28,15 @@ public class ClientInverterManagerService( HttpClient httpClient, ILogger<Client
         return new TariffComparison();
     }
 
-    public async Task<IEnumerable<GroupedConsumption>?> GetConsumption(DateTime start, DateTime end, GroupByType groupBy, CancellationToken token)
+    public async Task<ConsumptionResponse?> GetConsumption(ConsumptionRequest req, CancellationToken token)
     {
         var url = $"inverter/consumption";
-        var req = new ConsumptionRequest { Start = start, End = end, GroupBy = groupBy};
+
         try
         {
             var response = await httpClient.PostAsJsonAsync(url, req, token);
             response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadFromJsonAsync<IEnumerable<GroupedConsumption>>(token);
+            var result = await response.Content.ReadFromJsonAsync<ConsumptionResponse>(token);
 
             if (result != null)
                 return result;

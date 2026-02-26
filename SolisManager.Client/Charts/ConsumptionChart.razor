@@ -13,13 +13,22 @@
                        Height="@("100%")">
 
                 <ApexPointSeries TItem="GroupedConsumption"
-                                 Items="@ChartData"
+                                 Items="@ChartData.ConsumptionData"
                                  Name="Cost"
                                  XValue="@(e => e.StartTime?.Date)"
                                  YValue="@(e => e.NetCost)"
                                  SeriesType="SeriesType.Bar"
-                                 Color="lightgrey"
+                                 Color="darkred"
                                  PointColor="e => GetColor(e)"/>
+
+                <ApexPointSeries TItem="GroupedConsumption"
+                                 Items="@ChartData.ComparisonConsumptionData"
+                                 Name="Comparison Cost"
+                                 XValue="@(e => e.StartTime?.Date)"
+                                 YValue="@(e => e.NetCost)"
+                                 SeriesType="SeriesType.Bar"
+                                 Color="orange"
+                                 PointColor="e => GetComparisonColor(e)"/>
             </ApexChart>
         </div>
     }
@@ -27,9 +36,10 @@
 
 @code {
     [Parameter, EditorRequired]
-    public IEnumerable<GroupedConsumption>? ChartData { get; set; }
-
+    public ConsumptionResponse? ChartData { get; set; }
+    
     private string GetColor(GroupedConsumption item) => item.NetCost > 0 ? "firebrick" : "green";
+    private string GetComparisonColor(GroupedConsumption item) => item.NetCost > 0 ? "orange" : "lightblue";
 
     protected override void SetOptions(ApexChartOptions<GroupedConsumption> options)
     {
